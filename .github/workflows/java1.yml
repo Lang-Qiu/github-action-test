@@ -26,3 +26,16 @@ jobs:
     - name: Test with Maven
       run: mvn -B test --file pom.xml
 
+    - name: Send mail on failure
+      if: failure()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.MAIL_USERNAME }}
+        password: ${{ secrets.MAIL_PASSWORD }}
+        subject: "CI Build Failed: ${{ github.repository }}"
+        body: "The build for commit ${{ github.sha }} failed. See details here: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        to: dongmengzhe@sjtu.edu.cn
+        from: GitHub Actions
+
